@@ -1,5 +1,7 @@
 # Amazon Buy Box Analysis
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This repository contains a graduate-level industrial engineering course project analyzing how Amazon selects the winner of its Buy Box. The project uses the training and test datasets provided for the assignment and applies Bayesian network modeling to study the relationship between seller identity, pricing, fulfilment, credibility, and position in the marketplace listing.
 
 ## Project overview
