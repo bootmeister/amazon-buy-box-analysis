@@ -6,8 +6,18 @@ library(corrplot)
 
 options(scipen = 999)
 
+project_root <- if (file.exists("data/amz_train.rds")) {
+  normalizePath(".", winslash = "/", mustWork = TRUE)
+} else if (file.exists(file.path("..", "data", "amz_train.rds"))) {
+  normalizePath("..", winslash = "/", mustWork = TRUE)
+} else {
+  normalizePath(getwd(), winslash = "/", mustWork = TRUE)
+}
+project_data_dir <- file.path(project_root, "data")
+project_output_dir <- file.path(project_root, "output")
+if (!dir.exists(project_output_dir)) dir.create(project_output_dir, recursive = TRUE)
 
-train <- readRDS("amz_train.rds")
+train <- readRDS(file.path(project_data_dir, "amz_train.rds"))
 
 # We are inspecting a quick look at our data at hand, what the variables are and what their data types are.
 str(train)
@@ -406,7 +416,7 @@ bn_data <- train[, c("seller_type", "is_fba", "is_prime",
 # We are saving the constraints so Part 3 can load them without re-running
 saveRDS(list(whitelist = whitelist, blacklist = blacklist,
              hypo_dag  = hypo_dag),
-        "part2_constraints.rds")
+        file.path(project_output_dir, "part2_constraints.rds"))
 
 
 # ------------ Question 3 ---------------
@@ -459,7 +469,7 @@ lapply(bn_data, table)
 
 # We are loading whitelist and blacklist from Part 2, we had created before. 
 
-ctrx <- readRDS("part2_constraints.rds")
+ctrx <- readRDS(file.path(project_output_dir, "part2_constraints.rds"))
 wl   <- ctrx$whitelist
 bl   <- ctrx$blacklist
 
@@ -600,7 +610,7 @@ saveRDS(list(chosen_dag   = chosen_dag,
              all_dags     = list(hc = hc_dag, iamb = iamb_dag, mmhc = mmhc_dag),
              arc_strength = arc_strength,
              avg_dag      = avg_dag),
-        "part3_chosen_model.rds")
+        file.path(project_output_dir, "part3_chosen_model.rds"))
 
 cat("\nSaved part3_chosen_model.rds — ready for Part 4.\n")
 
@@ -611,7 +621,7 @@ cat("\nSaved part3_chosen_model.rds — ready for Part 4.\n")
 library(bnlearn)
 
 # Load what Question 3 saved (works on a fresh session).
-p3         <- readRDS("part3_chosen_model.rds")
+p3         <- readRDS(file.path(project_output_dir, "part3_chosen_model.rds"))
 chosen_dag <- p3$chosen_dag      # = hc_dag
 bn_data    <- p3$bn_data         # the 8-column training frame
 all_dags   <- p3$all_dags        # list(hc=, iamb=, mmhc=)
@@ -651,7 +661,7 @@ cat("  Gap              :", round(abs(prob_amz_BN - prob_amz_data), 4), "\n")
 
 
 
-test <- readRDS("amz_test_full.rds")
+test <- readRDS(file.path(project_data_dir, "amz_test_full.rds"))
 test <- test[test$price > 0, ]               # ignore unusable rows
 
 # seller_type
