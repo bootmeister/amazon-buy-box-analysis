@@ -1,7 +1,7 @@
 #  Amazon Buy Box
 #  Exploratory Data Analysis
 
-# ----------- QUESTION 1 ----------------------
+# Part 1: descriptive analysis
 library(corrplot)
 
 options(scipen = 999)
@@ -258,7 +258,7 @@ nrow(outliers$bbox == "success")
 
 
 
-# ----------- QUESTION 2 ----------------------
+# Part 2: structural interpretation and model formulation
 
 library(bnlearn)
 
@@ -419,8 +419,7 @@ saveRDS(list(whitelist = whitelist, blacklist = blacklist,
         file.path(project_output_dir, "part2_constraints.rds"))
 
 
-# ------------ Question 3 ---------------
-
+# Part 3: structure learning
 
 library(bnlearn)
 
@@ -614,9 +613,7 @@ saveRDS(list(chosen_dag   = chosen_dag,
 
 cat("\nSaved part3_chosen_model.rds — ready for Part 4.\n")
 
-# --- Question 4 ----
-
-#
+# Part 4: parameter learning, inference, and prediction
 
 library(bnlearn)
 
